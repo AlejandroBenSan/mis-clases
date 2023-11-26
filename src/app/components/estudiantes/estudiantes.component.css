@@ -1,0 +1,22 @@
+.table-container {
+    position: relative;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 20px;
+  }
+  
+  .add-btn {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2;
+  }
+  
+  /* Estilos para la tabla */
+  .mat-elevation-z8 {
+    box-shadow: 0 6px 6px -3px rgba(0,0,0,0.2),
+                0 10px 14px 1px rgba(0,0,0,0.14),
+                0 4px 18px 3px rgba(0,0,0,0.12);
+  }
+  
+  /* Estilos adicionales para la tabla y los botones si es necesario */

@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 0;
+    font-family: Roboto, sans-serif;
+  }
+  
+  mat-toolbar-row > span {
+    flex: 1;
+  }
+  
+  .content {
+    margin-top: 60px; /* Ajusta según la altura de tu encabezado */
+    margin-bottom: 60px; /* Ajusta según la altura de tu pie de página */
+  }

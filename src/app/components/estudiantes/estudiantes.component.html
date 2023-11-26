@@ -1,0 +1,28 @@
+<div class="table-container">
+    <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
+  
+      <!-- Columna de Nombres -->
+      <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+        <mat-cell *matCellDef="let elemento"> {{elemento.nombre}} </mat-cell>
+      </ng-container>
+  
+      <!-- Columna de Apellidos -->
+      <ng-container matColumnDef="apellido">
+        <mat-header-cell *matHeaderCellDef> Apellido </mat-header-cell>
+        <mat-cell *matCellDef="let elemento"> {{elemento.apellido}} </mat-cell>
+      </ng-container>
+  
+      <!-- ... más columnas según sea necesario -->
+  
+      <!-- Cabecera de la tabla -->
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <!-- Filas de la tabla -->
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  
+    </mat-table>
+  
+    <button mat-fab color="primary" class="add-btn" (click)="nuevoEstudiante()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
