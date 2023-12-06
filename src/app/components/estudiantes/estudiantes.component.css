@@ -1,22 +1,32 @@
-.table-container {
-    position: relative;
-    max-width: 100%;
-    overflow-x: auto;
-    padding: 20px;
-  }
-  
-  .add-btn {
-    position: absolute;
-    right: 16px;
-    bottom: 16px;
-    z-index: 2;
-  }
-  
-  /* Estilos para la tabla */
-  .mat-elevation-z8 {
-    box-shadow: 0 6px 6px -3px rgba(0,0,0,0.2),
-                0 10px 14px 1px rgba(0,0,0,0.14),
-                0 4px 18px 3px rgba(0,0,0,0.12);
-  }
-  
-  /* Estilos adicionales para la tabla y los botones si es necesario */
+.container {
+  margin: 20px;
+}
+
+.filter {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.fab-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+}
+
+.success-snackbar {
+  background-color: green;
+}
+
+.error-snackbar {
+  background-color: red;
+}

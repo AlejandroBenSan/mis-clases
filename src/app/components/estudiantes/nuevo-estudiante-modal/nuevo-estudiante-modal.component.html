@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Añadir Estudiante</h2>
+<mat-dialog-content>
+  <form [formGroup]="estudianteForm" class="form-grid">
+    <div class="grid-row">
+      <mat-form-field class="grid-column">
+        <input matInput placeholder="Nombre *" formControlName="nombre">
+      </mat-form-field>
+      <mat-form-field class="grid-column">
+        <input matInput placeholder="Apellidos" formControlName="apellidos">
+      </mat-form-field>
+    </div>
+    <div class="grid-row">
+      <mat-form-field class="grid-column">
+        <input matInput placeholder="Email" formControlName="email" type="email">
+        
+      </mat-form-field>
+      <mat-form-field class="grid-column">
+        <input matInput type="number" placeholder="Teléfono" formControlName="telefono">
+      </mat-form-field>
+    </div>
+    <div class="grid-row">
+      <mat-form-field class="full-width">
+        <input matInput placeholder="Edad" formControlName="edad" type="number">
+      </mat-form-field>
+    </div>
+    <div class="grid-row">
+      <div class="full-width-radio">
+        <label>¿Estudiante activo? *</label>
+        <mat-radio-group formControlName="activo">
+          <mat-radio-button value="true">Sí</mat-radio-button>
+          <mat-radio-button value="false">No</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button (click)="agregarEstudiante()" cdkFocusInitial>Añadir</button>
+</mat-dialog-actions>

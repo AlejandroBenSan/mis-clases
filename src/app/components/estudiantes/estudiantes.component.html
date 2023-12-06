@@ -1,28 +1,49 @@
-<div class="table-container">
-    <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8">
-  
-      <!-- Columna de Nombres -->
-      <ng-container matColumnDef="nombre">
-        <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
-        <mat-cell *matCellDef="let elemento"> {{elemento.nombre}} </mat-cell>
-      </ng-container>
-  
-      <!-- Columna de Apellidos -->
-      <ng-container matColumnDef="apellido">
-        <mat-header-cell *matHeaderCellDef> Apellido </mat-header-cell>
-        <mat-cell *matCellDef="let elemento"> {{elemento.apellido}} </mat-cell>
-      </ng-container>
-  
-      <!-- ... más columnas según sea necesario -->
-  
-      <!-- Cabecera de la tabla -->
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <!-- Filas de la tabla -->
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  
-    </mat-table>
-  
-    <button mat-fab color="primary" class="add-btn" (click)="nuevoEstudiante()">
-      <mat-icon>add</mat-icon>
-    </button>
+<div class="container">
+  <div class="filter">
+    <mat-form-field>
+      <mat-label>Buscar estudiante</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Nombre, apellidos, email">
+    </mat-form-field>
   </div>
+  
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+    </ng-container>
+
+    <!-- Apellidos Column -->
+    <ng-container matColumnDef="apellidos">
+      <th mat-header-cell *matHeaderCellDef> Apellidos </th>
+      <td mat-cell *matCellDef="let element"> {{element.apellidos}} </td>
+    </ng-container>
+
+    <!-- Email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button (click)="editarEstudiante(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-button (click)="eliminarEstudiante(element)">
+          <mat-icon style="color:red">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+  </table>
+  <button mat-fab color="primary" class="fab-button" (click)="nuevoEstudiante()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
