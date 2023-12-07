@@ -1,4 +1,11 @@
 <div class="container">
+
+  <button class="boton-nuevoGrupo" mat-raised-button color="primary" (click)="nuevoGrupo()">
+    Crear grupo
+  </button>
+
+  <h2>Estudiantes</h2>
+
   <div class="filter">
     <mat-form-field>
       <mat-label>Buscar estudiante</mat-label>
@@ -24,6 +31,11 @@
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef> Email </th>
       <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="precio clase">
+      <th mat-header-cell *matHeaderCellDef> Precio clase </th>
+      <td mat-cell *matCellDef="let element"> {{element.precioClase}} € </td>
     </ng-container>
 
     <!-- Acciones Column -->

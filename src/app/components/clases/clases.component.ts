@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AngularFirestore } from '@angular/fire/compat/firestore'
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NuevaClaseNoFechaComponent } from './nueva-clase-no-fecha/nueva-clase-no-fecha.component';
 
 @Component({
   selector: 'app-clases',
@@ -7,11 +11,27 @@ import { Component } from '@angular/core';
 })
 export class ClasesComponent {
 
-  constructor(){
+  constructor(private firestore: AngularFirestore, public dialog: MatDialog, private snackBar: MatSnackBar){
 
   }
 
   displayedColumns: string[] = ['hora', 'estudiantes', 'precio', 'estado', 'acciones'];
+
+  addClassUndefinedDate(){
+    {
+      const dialogRef = this.dialog.open(NuevaClaseNoFechaComponent, {
+        width: '500px',
+        disableClose: true
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+  
+          console.log(result);
+        }
+      });
+    }
+  }
 
   days = [
     {

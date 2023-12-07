@@ -34,3 +34,7 @@ mat-accordion {
   border-radius: 50%;
   font-size: 0.8em;
 }
+
+.boton-nuevaClase-fecha{
+  margin-bottom: 10px;
+}

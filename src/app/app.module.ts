@@ -31,6 +31,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import {MatBadgeModule} from '@angular/material/badge';
+import { NuevaClaseNoFechaComponent } from './components/clases/nueva-clase-no-fecha/nueva-clase-no-fecha.component';
+import { CrearGrupoComponent } from './components/estudiantes/crear-grupo/crear-grupo.component';
+import { MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -48,9 +52,13 @@ registerLocaleData(localeEs);
     NuevoEstudianteModalComponent,
     ConfirmDelEstComponent,
     ModificarEstudianteComponent,
+    NuevaClaseNoFechaComponent,
+    CrearGrupoComponent,
   ],
   imports: [
     BrowserModule,
+    MatSelectModule,
+    MatAutocompleteModule,
     MatBadgeModule,
     MatExpansionModule,
     MatSnackBarModule,

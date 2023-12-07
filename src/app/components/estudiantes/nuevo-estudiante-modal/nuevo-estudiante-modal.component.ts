@@ -15,6 +15,7 @@ export class NuevoEstudianteModalComponent {
     edad: [''],
     email: ['', [Validators.required, Validators.email]],
     telefono: [''],
+    precioClase: ['',Validators.required],
     activo: [true, Validators.required],
     fechaIngreso: [new Date()]
   });
@@ -28,7 +29,7 @@ export class NuevoEstudianteModalComponent {
   }
 
   agregarEstudiante() {
-    if (this.estudianteForm.value.nombre && this.estudianteForm.value.activo !== null) {
+    if (this.estudianteForm.value.nombre && this.estudianteForm.value.activo !== null && this.estudianteForm.value.precioClase) {
       // Aquí puedes manejar lo que sucede cuando el formulario es válido y los campos requeridos están llenos
       this.dialogRef.close(this.estudianteForm.value);
     } else {

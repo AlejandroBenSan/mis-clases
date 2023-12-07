@@ -24,6 +24,7 @@ export class ModificarEstudianteComponent {
     email: [this.data.estudiante.email, [Validators.required, Validators.email]],
     telefono: [this.data.estudiante.telefono],
     activo: [this.data.estudiante.activo, Validators.required],
+    precioClase: [this.data.estudiante.precioClase, Validators.required],
     fechaIngreso: [this.data.estudiante.fechaIngreso || new Date()]
 });
 

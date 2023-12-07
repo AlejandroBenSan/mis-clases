@@ -6,5 +6,5 @@ Clases{
     contenido de la clase,
     archivos (materiales)
     deberes de casa (apuntar que es lo que tienen que hacer)
-    estado (cancelada, activa, aplazada)
+    estado (cancelada, activa, aplazada, realizada)
 }

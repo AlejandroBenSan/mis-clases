@@ -8,6 +8,7 @@ import { NuevoEstudianteModalComponent } from './nuevo-estudiante-modal/nuevo-es
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDelEstComponent } from '../dialogConfirm/confirm-del-est/confirm-del-est.component';
 import { ModificarEstudianteComponent } from './modificar-estudiante/modificar-estudiante.component';
+import { CrearGrupoComponent } from './crear-grupo/crear-grupo.component';
 
 @Component({
   selector: 'app-estudiantes',
@@ -18,7 +19,8 @@ export class EstudiantesComponent {
 
   estudiantes: Observable<EstudianteI[]> = this.firestore.collection<EstudianteI>('estudiantes').valueChanges({ idField: 'id' });
   dataSource: MatTableDataSource<EstudianteI>
-  displayedColumns: string[] = ['nombre', 'apellidos', 'email', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'apellidos', 'email', 'precio clase' ,'acciones'];
+  
   
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private snackBar: MatSnackBar){
     this.dataSource = new MatTableDataSource();
@@ -132,6 +134,18 @@ actualizarEstudiante(datosEstudiante: EstudianteI) {
     });
   }
 
+    nuevoGrupo(){
+      const dialogRef = this.dialog.open(CrearGrupoComponent, {
+        width: '500px',
+        disableClose: true,
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            console.log(result);
+          }
+      });
+    }
 
 }
 

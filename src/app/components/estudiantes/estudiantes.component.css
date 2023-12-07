@@ -30,3 +30,7 @@ mat-form-field {
 .error-snackbar {
   background-color: red;
 }
+
+.boton-nuevoGrupo{
+  margin-bottom: 10px;
+}
