@@ -26,6 +26,7 @@ import { NuevoEstudianteModalComponent } from './components/estudiantes/nuevo-es
 import {MatRadioModule} from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDelEstComponent } from './components/dialogConfirm/confirm-del-est/confirm-del-est.component';
+import { ModificarEstudianteComponent } from './components/estudiantes/modificar-estudiante/modificar-estudiante.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ConfirmDelEstComponent } from './components/dialogConfirm/confirm-del-e
     HomeComponent,
     NuevoEstudianteModalComponent,
     ConfirmDelEstComponent,
+    ModificarEstudianteComponent,
   ],
   imports: [
     BrowserModule,

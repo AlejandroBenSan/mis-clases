@@ -1,0 +1,19 @@
+.form-grid {
+    display: grid;
+    grid-gap: 10px; /* Espacio entre filas y columnas */
+  }
+  
+  .grid-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+    grid-gap: 10px; /* Espacio entre columnas */
+  }
+  
+  .full-width {
+    grid-column: span 1; /* Ocupa las dos columnas */
+  }
+
+  .full-width-radio {
+    grid-column: span 2; /* Ocupa las dos columnas */
+  }
+  

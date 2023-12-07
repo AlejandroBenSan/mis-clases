@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NuevoEstudianteModalComponent } from './nuevo-estudiante-modal/nuevo-estudiante-modal.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDelEstComponent } from '../dialogConfirm/confirm-del-est/confirm-del-est.component';
+import { ModificarEstudianteComponent } from './modificar-estudiante/modificar-estudiante.component';
 
 @Component({
   selector: 'app-estudiantes',
@@ -78,13 +79,44 @@ export class EstudiantesComponent {
   }
 
   editarEstudiante(estudiante: EstudianteI) {
-    // Lógica para editar estudiante
-  }
+    const dialogRef = this.dialog.open(ModificarEstudianteComponent, {
+        width: '500px',
+        disableClose: true,
+        data: { estudiante: estudiante } // Pasando datos al diálogo
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.actualizarEstudiante(result);
+        }
+    });
+}
+
+actualizarEstudiante(datosEstudiante: EstudianteI) {
+  console.log(datosEstudiante.id)
+  this.firestore.collection('estudiantes').doc(datosEstudiante.id).update({
+    activo: datosEstudiante.activo,
+    nombre: datosEstudiante.nombre,
+    apellidos: datosEstudiante.apellidos,
+    edad: datosEstudiante.edad,
+    telefono: datosEstudiante.telefono,
+    email: datosEstudiante.email
+
+  })
+    .then(() => {
+      console.log('Estudiante actualizado con éxito');
+      this.mostrarSnackBar('Estudiante actualizado con éxito', 'success-snackbar');
+    })
+    .catch(error => {
+      console.log('Error al actualizar estudiante: ', error);
+      this.mostrarSnackBar('Error al actualizar estudiante', 'error-snackbar');
+    });
+}
 
   eliminarEstudiante(estudiante: EstudianteI) {
     const dialogRef = this.dialog.open(ConfirmDelEstComponent, {
       width: '250px',
-      data: { mensaje: '¿Estás seguro de que deseas eliminar a este estudiante?' }
+      data: { mensaje: '¿Estás seguro de que deseas eliminar a este estudiante? Pasara a estar no activo.' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
