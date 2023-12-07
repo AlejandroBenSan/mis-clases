@@ -1,1 +1,62 @@
-<p>clases works!</p>
+<mat-accordion multi="true">
+    <mat-expansion-panel *ngFor="let day of days">
+        <mat-expansion-panel-header>
+            <mat-panel-title class="panel-title">
+                <span class="date-title">{{ day.date | date: 'fullDate' }}</span>
+                <span *ngIf="day.classes.length > 0" class="badge">
+                    {{ day.classes.length }}
+                </span>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <table mat-table [dataSource]="day.classes" class="mat-elevation-z8">
+            
+            <!-- Columna Hora -->
+            <ng-container matColumnDef="hora">
+                <th mat-header-cell *matHeaderCellDef> Hora </th>
+                <td mat-cell *matCellDef="let clase"> {{ clase.hora }} </td>
+            </ng-container>
+
+            <!-- Columna Estudiantes -->
+            <ng-container matColumnDef="estudiantes">
+                <th mat-header-cell *matHeaderCellDef> Estudiantes </th>
+                <td mat-cell *matCellDef="let clase"> {{ clase.estudiantes }} </td>
+            </ng-container>
+
+            <!-- Columna Precio -->
+            <ng-container matColumnDef="precio">
+                <th mat-header-cell *matHeaderCellDef> Precio </th>
+                <td mat-cell *matCellDef="let clase"> {{ clase.precio }} </td>
+            </ng-container>
+
+            <!-- Columna Estado -->
+            <ng-container matColumnDef="estado">
+                <th mat-header-cell *matHeaderCellDef> Estado </th>
+                <td mat-cell *matCellDef="let clase"> {{ clase.estado }} </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                <td mat-cell *matCellDef="let clase"> 
+                    <button mat-icon-button color="primary" (click)="editClass(clase)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deleteClass(clase)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button class="button-done" mat-icon-button (click)="doneClass(clase)">
+                        <mat-icon >check</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <button mat-raised-button color="primary" (click)="addClass(day)">
+            Añadir Clase
+        </button>
+    </mat-expansion-panel>
+</mat-accordion>

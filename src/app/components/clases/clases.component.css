@@ -1,0 +1,36 @@
+mat-accordion {
+    width: 100%;
+  }
+  
+  mat-expansion-panel-header {
+    background-color: #e3f2fd;
+  }
+  
+  mat-panel-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+
+  .button-done {
+    color: green; /* Cambia esto por el tono exacto de verde que prefieras */
+}
+
+.panel-title {
+  display: flex;
+  justify-content: space-between; /* Alinea los elementos a cada extremo */
+  align-items: center; /* Centra los elementos verticalmente */
+  width: 100%; /* Asegura que el título ocupe todo el ancho disponible */
+}
+
+.badge {
+  margin-left: 10px;
+  background-color: red; /* Cambia a tu color preferido */
+  color: white;
+  padding: 3px 6px;
+  border-radius: 50%;
+  font-size: 0.8em;
+}

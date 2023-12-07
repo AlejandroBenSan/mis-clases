@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,6 +27,13 @@ import {MatRadioModule} from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ConfirmDelEstComponent } from './components/dialogConfirm/confirm-del-est/confirm-del-est.component';
 import { ModificarEstudianteComponent } from './components/estudiantes/modificar-estudiante/modificar-estudiante.component';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import {MatBadgeModule} from '@angular/material/badge';
+
+//PARA REGISTRAR EL IDIOMA ESPAÑOL
+registerLocaleData(localeEs);
 
 @NgModule({
   declarations: [
@@ -44,6 +51,8 @@ import { ModificarEstudianteComponent } from './components/estudiantes/modificar
   ],
   imports: [
     BrowserModule,
+    MatBadgeModule,
+    MatExpansionModule,
     MatSnackBarModule,
     MatRadioModule,
     MatDialogModule,
@@ -61,7 +70,9 @@ import { ModificarEstudianteComponent } from './components/estudiantes/modificar
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAnalyticsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es' },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
