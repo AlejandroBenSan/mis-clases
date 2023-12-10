@@ -3,7 +3,15 @@
     <span>Mis clases</span>
     <span class="example-spacer"></span>
     <button mat-button [routerLink]="['/']">Inicio</button>
-    <button mat-button [routerLink]="['/estudiantes']">Estudiantes</button>
+
+    <!-- Botón con menú desplegable -->
+    <button mat-button [matMenuTriggerFor]="estudiantesMenu">Estudiantes</button>
+    <mat-menu #estudiantesMenu="matMenu">
+      <button mat-menu-item [routerLink]="['/estudiantes']">Particulares</button>
+      <button mat-menu-item [routerLink]="['/grupos']">Grupos</button>
+      <!-- Más opciones si es necesario -->
+    </mat-menu>
+
     <button mat-button [routerLink]="['/clases']">Clases</button>
     <button mat-button [routerLink]="['/contabilidad']">Contabilidad</button>
     <button mat-button [routerLink]="['/ajustes']">Ajustes</button>

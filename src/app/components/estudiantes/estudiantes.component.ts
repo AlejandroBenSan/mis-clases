@@ -8,7 +8,6 @@ import { NuevoEstudianteModalComponent } from './nuevo-estudiante-modal/nuevo-es
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDelEstComponent } from '../dialogConfirm/confirm-del-est/confirm-del-est.component';
 import { ModificarEstudianteComponent } from './modificar-estudiante/modificar-estudiante.component';
-import { CrearGrupoComponent } from './crear-grupo/crear-grupo.component';
 
 @Component({
   selector: 'app-estudiantes',
@@ -102,7 +101,8 @@ actualizarEstudiante(datosEstudiante: EstudianteI) {
     apellidos: datosEstudiante.apellidos,
     edad: datosEstudiante.edad,
     telefono: datosEstudiante.telefono,
-    email: datosEstudiante.email
+    email: datosEstudiante.email,
+    precioClase: datosEstudiante.precioClase
 
   })
     .then(() => {
@@ -134,18 +134,7 @@ actualizarEstudiante(datosEstudiante: EstudianteI) {
     });
   }
 
-    nuevoGrupo(){
-      const dialogRef = this.dialog.open(CrearGrupoComponent, {
-        width: '500px',
-        disableClose: true,
-      });
-
-      dialogRef.afterClosed().subscribe(result => {
-          if (result) {
-            console.log(result);
-          }
-      });
-    }
+    
 
 }
 

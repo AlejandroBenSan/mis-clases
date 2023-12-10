@@ -1,9 +1,5 @@
 <div class="container">
 
-  <button class="boton-nuevoGrupo" mat-raised-button color="primary" (click)="nuevoGrupo()">
-    Crear grupo
-  </button>
-
   <h2>Estudiantes</h2>
 
   <div class="filter">
@@ -35,7 +31,7 @@
 
     <ng-container matColumnDef="precio clase">
       <th mat-header-cell *matHeaderCellDef> Precio clase </th>
-      <td mat-cell *matCellDef="let element"> {{element.precioClase}} € </td>
+      <td mat-cell *matCellDef="let element"> {{element.precioClase}} zl </td>
     </ng-container>
 
     <!-- Acciones Column -->

@@ -1,0 +1,34 @@
+.container {
+    margin: 20px;
+  }
+  
+  .filter {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+  }
+
+  table {
+    width: 100%;
+  }
+  
+  mat-form-field {
+    width: 100%;
+  }
+  
+  .fab-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+  }
+  
+  .success-snackbar {
+    background-color: green;
+  }
+  
+  .error-snackbar {
+    background-color: red;
+  }
+  
+  

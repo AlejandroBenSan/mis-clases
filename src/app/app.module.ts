@@ -35,6 +35,9 @@ import { NuevaClaseNoFechaComponent } from './components/clases/nueva-clase-no-f
 import { CrearGrupoComponent } from './components/estudiantes/crear-grupo/crear-grupo.component';
 import { MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatMenuModule } from '@angular/material/menu';
+import { GruposComponent } from './components/estudiantes/grupos/grupos.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -54,10 +57,13 @@ registerLocaleData(localeEs);
     ModificarEstudianteComponent,
     NuevaClaseNoFechaComponent,
     CrearGrupoComponent,
+    GruposComponent,
   ],
   imports: [
     BrowserModule,
+    MatTooltipModule,
     MatSelectModule,
+    MatMenuModule,
     MatAutocompleteModule,
     MatBadgeModule,
     MatExpansionModule,

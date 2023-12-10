@@ -37,13 +37,15 @@ export class ClasesComponent {
     {
       date: new Date(),
       classes: [
-        { hora: '08:00', estudiantes: 20, precio: '50€', estado: 'Confirmado' },
+        { hora: '08:00', estudiantes: "prueba", precio: '50€', estado: 'Confirmado' },
       ]
     },
     {
       date: "2023/12/08",
       classes: [
-        { hora: '08:00', estudiantes: 20, precio: '50€', estado: 'Confirmado' },
+        { hora: '15:30', estudiantes: "Maciek", precio: '60 zl', estado: 'Confirmado' },
+        { hora: '20:00', estudiantes: "Natalka", precio: '50 zl', estado: 'Confirmado' },
+        { hora: '21:00', estudiantes: "Natalka", precio: '50 zl', estado: 'Confirmado' },
       ]
     }
   ];
