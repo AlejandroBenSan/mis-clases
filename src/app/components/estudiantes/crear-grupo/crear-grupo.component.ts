@@ -24,7 +24,7 @@ export class CrearGrupoComponent {
 
       this.grupoForm = this.fb.group({
         nombre: ['', Validators.required],
-        estudiantes: this.estudiantesControl,
+        estudiantesSeleccionados: [[], Validators.required], // Cambio aquí
         precio: [null, Validators.required],
         activo: [true, Validators.required]
       });
@@ -45,25 +45,66 @@ export class CrearGrupoComponent {
   }
 
   private obtenerEstudiantesFiltrados(valor: string): Observable<EstudianteI[]> {
-    if (typeof valor !== 'string') {
-      valor = '';
-    }
-
     const filtroValor = valor.toLowerCase();
     return this.estudiantes.pipe(
       map(estudiantes => estudiantes.filter(estudiante => 
         estudiante.nombre.toLowerCase().includes(filtroValor) || 
-        estudiante.apellidos?.toLowerCase().includes(filtroValor))
+        estudiante.apellidos!.toLowerCase().includes(filtroValor))
       )
     );
   }
+
   obtenerEstudiantes() {
     this.estudiantes = this.firestore.collection<EstudianteI>('estudiantes', ref => 
       ref.where('activo', '==', "true")
     ).valueChanges({ idField: 'id' });
   }
 
-  guardarGrupo(){
+  guardarGrupo() {
+    const grupoData = this.grupoForm.value;
+  
+    // Verificar si el formulario es válido
+    if (this.grupoForm.invalid) {
+      this.snackBar.open('Formulario no válido', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
 
+    if(grupoData.estudiantesSeleccionados.length == 1){
+      this.snackBar.open('No se puede crear un grupo con solo un estudiante', 'Cerrar', {
+        duration: 2000,
+      });
+    }
+
+    // Comprobar si ya existe un grupo con el mismo nombre
+    this.firestore.collection('grupos', ref => ref.where('nombre', '==', grupoData.nombre))
+      .get()
+      .subscribe(docSnapshot => {
+        if (docSnapshot.empty) {
+          // El grupo no existe, proceder a guardarlo
+          this.firestore.collection('grupos').add({
+            nombre: grupoData.nombre,
+            estudiantesIds: grupoData.estudiantesSeleccionados, // Aquí asumo que estás guardando los IDs de los estudiantes
+            precioClase: grupoData.precio,
+            activo: grupoData.activo
+          }).then(() => {
+            this.snackBar.open('Grupo guardado con éxito', 'Cerrar', {
+              duration: 2000,
+            });
+            this.dialogRef.close();
+          }).catch(error => {
+            console.error('Error al guardar el grupo: ', error);
+            this.snackBar.open('Error al guardar el grupo', 'Cerrar', {
+              duration: 2000,
+            });
+          });
+        } else {
+          // El grupo ya existe
+          this.snackBar.open('Ya existe un grupo con ese nombre', 'Cerrar', {
+            duration: 2000,
+          });
+        }
+      });
   }
 }

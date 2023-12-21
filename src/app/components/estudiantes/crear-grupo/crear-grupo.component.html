@@ -2,14 +2,15 @@
 <mat-dialog-content>
     <form [formGroup]="grupoForm" class="form-grid">
         <div class="grid-row">
-            <mat-form-field class="full-width-radio">
-              <mat-label>Seleccionar Estudiantes</mat-label>
-              <mat-select formControlName="estudiantesSeleccionados" multiple>
-                <mat-option *ngFor="let estudiante of estudiantesFiltrados$ | async" [value]="estudiante">
-                  {{ estudiante.nombre }} {{ estudiante.apellidos }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          
+          <mat-form-field class="full-width-radio">
+            <mat-label>Seleccionar Estudiantes</mat-label>
+            <mat-select formControlName="estudiantesSeleccionados" multiple>
+              <mat-option *ngFor="let estudiante of estudiantes | async" [value]="estudiante.id">
+                {{ estudiante.nombre }} {{ estudiante.apellidos }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
           </div>
       <div class="grid-row">
         <mat-form-field class="full-width">

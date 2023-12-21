@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Modificar Grupo</h2>
+<mat-dialog-content>
+    <form [formGroup]="grupoForm" class="form-grid">
+        <div class="grid-row">
+          
+            <mat-form-field class="full-width-radio">
+              <mat-label>Seleccionar Estudiantes</mat-label>
+              <mat-select formControlName="estudiantesIds" multiple>
+                <mat-option *ngFor="let estudiante of estudiantes | async" [value]="estudiante.id">
+                  {{ estudiante.nombre }} {{ estudiante.apellidos }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="grid-row">
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Nombre *" formControlName="nombre" type="text">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Precio *" formControlName="precioClase" type="number">
+            </mat-form-field>
+          </div>
+        <div class="grid-row">
+            <div class="full-width-radio">
+              <label>Grupo activo? *</label>
+              <mat-radio-group formControlName="activo">
+                <mat-radio-button value="true">Sí</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button (click)="editarGrupo()" cdkFocusInitial>Editar</button>
+</mat-dialog-actions>
+  

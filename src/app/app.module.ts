@@ -38,6 +38,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MatMenuModule } from '@angular/material/menu';
 import { GruposComponent } from './components/estudiantes/grupos/grupos.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import { ModificarGrupoComponent } from './components/estudiantes/modificar-grupo/modificar-grupo.component';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -58,6 +59,7 @@ registerLocaleData(localeEs);
     NuevaClaseNoFechaComponent,
     CrearGrupoComponent,
     GruposComponent,
+    ModificarGrupoComponent,
   ],
   imports: [
     BrowserModule,

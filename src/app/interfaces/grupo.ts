@@ -1,9 +1,10 @@
 import { EstudianteI } from "./estudiante";
 
 export interface GrupoI {
-    id?: string;
-    nombre:string
-    estudiantes?: EstudianteI[]
-    precio:number
-    activo:boolean
-  }
+  id: string;
+  activo: string;
+  estudiantesIds: string[];
+  nombre: string;
+  precioClase: number;
+  estudiantes?: EstudianteI[]; // Esto es opcional y se añadirá más tarde
+}

@@ -17,12 +17,10 @@
         </ng-container>
 
         <ng-container matColumnDef="estudiantes">
-            <th mat-header-cell *matHeaderCellDef> Estudiantes </th>
-            <td mat-cell *matCellDef="let element" 
-                [matTooltip]="getStudentNamesTooltip(element.estudiantesIds)" 
-                matTooltipPosition="above">
-                {{element.estudiantesIds.length}} 
-            </td>
+          <th mat-header-cell *matHeaderCellDef> Estudiantes </th>
+          <td mat-cell *matCellDef="let element" [matTooltip]="listarNombresEstudiantes(element.estudiantes)">
+              {{element.estudiantes?.length || 0}}
+          </td>
         </ng-container>
     
         <ng-container matColumnDef="precio clase">

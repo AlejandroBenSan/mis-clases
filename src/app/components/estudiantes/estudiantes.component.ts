@@ -94,7 +94,6 @@ export class EstudiantesComponent {
 }
 
 actualizarEstudiante(datosEstudiante: EstudianteI) {
-  console.log(datosEstudiante.id)
   this.firestore.collection('estudiantes').doc(datosEstudiante.id).update({
     activo: datosEstudiante.activo,
     nombre: datosEstudiante.nombre,
