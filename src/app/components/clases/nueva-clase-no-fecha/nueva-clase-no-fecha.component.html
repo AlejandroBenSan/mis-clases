@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <form [formGroup]="claseForm" class="form-grid">
     <div class="grid-row">
-      <mat-radio-group formControlName="tipoClase">
+      <mat-radio-group formControlName="tipoClase" class="full-width-radio">
         <mat-radio-button value="particular">Particular</mat-radio-button>
         <mat-radio-button value="grupo">Grupo</mat-radio-button>
       </mat-radio-group>
@@ -35,21 +35,36 @@
         <input matInput placeholder="Precio" formControlName="precio">
       </mat-form-field>
     </div>
-    <div class="grid-row">
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
       <mat-form-field class="example-full-width">
         <mat-label>Fecha</mat-label>
-        <input matInput [matDatepicker]="picker" disabled>
+        <input matInput [matDatepicker]="picker" formControlName="fechaHora" >
         <mat-hint>DD/MM/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker disabled="false" [dateClass]="isClaseDay" #picker></mat-datepicker>
       </mat-form-field>
-      <ngb-timepicker [(ngModel)]="time" />
-      <hr />
-      <pre>Selected time: {{ time | json }}</pre> 
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <span style="font-size: small; text-align: center;">Inicio Clase</span>
+        <!--{standalone: true} SE UTILIZA ESTO PARA HACER EL MODULO INDEPENDIENTE Y QUE NO CREE QUE CONFLICTO AL SER UNA LIBRERIA DIFERENTE-->
+        <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}" [spinners]="false"/>
+      </div>
+    </div>
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
+      <mat-form-field floatLabel="always">
+        <mat-label>Duración</mat-label>
+        <input matInput type="number" formControlName="duracion">
+        <span matTextSuffix>Minutos</span>
+      </mat-form-field>
+    </div>
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
+      <mat-form-field class="full-width-radio">
+        <mat-label>Contenido</mat-label>
+        <textarea formControlName="contenido" matInput></textarea>
+      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-button cdkFocusInitial>Añadir</button>
+  <button mat-button cdkFocusInitial (click)="guardarClase()">Añadir</button>
 </mat-dialog-actions>

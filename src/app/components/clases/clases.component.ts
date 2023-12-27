@@ -19,7 +19,7 @@ export class ClasesComponent {
 
   dataSource: MatTableDataSource<ClaseI>
   clases!: Observable<ClaseI[]>;
-  displayedColumns: string[] = ['hora', 'estudiantes', 'precio', 'estado', 'acciones'];
+  displayedColumns: string[] = ['hora','duracion', 'estudiantes', 'precio', 'estado', 'acciones'];
   diasClases: diasClasesI[] = [];
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private snackBar: MatSnackBar){

@@ -26,6 +26,8 @@ export class NuevaClaseNoFechaComponent {
   //AUTORELLENO DEL PRECIO
   estudiantesNoSeleccionados: EstudianteI[] = []
   gruposNoSeleccionados: GrupoI[] = []
+  //HORA DE LA CLASE
+  time = { hour: new Date().getHours(), minute: new Date().getMinutes()};
   //
   diasClases: diasClasesI[] = [];
   clases!: Observable<ClaseI[]>;
@@ -37,15 +39,13 @@ export class NuevaClaseNoFechaComponent {
         tipoClase: [''],
         estudiante: [''],
         grupo: [''],
-        id: [''], // Opcional, por lo general no se incluye en el formulario
-        estudiantes: this.fb.array([], Validators.required), // Se maneja como un array de form controls
-        fecha: [null, Validators.required],
-        hora: [null, Validators.required],
+        estudiantesIds: this.fb.array([], Validators.required), // Se maneja como un array de form controls
+        fechaHora: [null, Validators.required],
+        duracion: [null, Validators.required],
         precio: [null, [Validators.required, Validators.min(0)]],
         contenido: [''],
         deberes: [''],
         estado: ['', Validators.required],
-        urlDocumento: [''] // Opcional, depende de si quieres manejar documentos
       });
   }
 
@@ -54,8 +54,6 @@ export class NuevaClaseNoFechaComponent {
     this.cargaDatos()
 
   }
-
-  time = { hour: 13, minute: 30 };
 
   //FUNCION PARA COMPROBAR LOS DIAS QUE HAY CLASES Y MARCARLAS EN EL CALENDARIO
   isClaseDay: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
@@ -161,18 +159,6 @@ export class NuevaClaseNoFechaComponent {
     );
   }
 
-  private obtenerEstudianteParticular(estudianteId: string): Observable<EstudianteI> {
-    if (!estudianteId) {
-      // Si el ID del estudiante es inválido o vacío, retorna un Observable de un EstudianteI vacío
-      return of({} as EstudianteI);
-    }
-  
-    return this.firestore.collection('estudiantes').doc(estudianteId).snapshotChanges().pipe(
-      map(action => action.payload.data() as EstudianteI),
-      take(1)
-    );
-  }
-
   private obtenerEstudiantesDelGrupo(estudiantesIds: string[]): Observable<EstudianteI[]> {
     
     if (estudiantesIds.length === 0) {
@@ -195,5 +181,110 @@ export class NuevaClaseNoFechaComponent {
   obtenerFechaYHora(timestamp: { seconds: number, nanoseconds: number }): Date {
     // Convierte el Timestamp a un objeto Date
     return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
-}
+  }
+
+  guardarClase(){
+    const grupoData = this.claseForm.value;
+
+    if (this.claseForm.get('tipoClase')!.value == "") {
+      this.snackBar.open('Debe seleccionar el tipo de clase', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if(this.claseForm.get('grupo')!.value == "" && this.claseForm.get('estudiante')!.value == ""){
+      this.snackBar.open('Debe seleccionar al menos un estudiante o grupo', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if(this.claseForm.get('precio')!.value == "" ){
+      this.snackBar.open('El precio de la clase no puede estar vacío', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if(this.claseForm.get('fechaHora')!.value == null){
+      this.snackBar.open('Debe seleccionar una fecha', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if (this.time == null || this.time.hour == null || this.time.minute == null) {
+      this.snackBar.open('Debe seleccionar tanto hora como minutos de la clase', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if(this.claseForm.get('duracion')!.value == null || this.claseForm.get('duracion')!.value <= 0){
+      this.snackBar.open('La duración de la clase no puede esta vacía o ser menor o igual a 0', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    let fecha = this.claseForm.get('fechaHora')!.value;
+    let fechaConHora = new Date(fecha);
+
+    // Obtener las horas y minutos del objeto 'time'
+    let horas = this.time.hour;
+    let minutos = this.time.minute;
+
+    // Establecer las horas y minutos en el objeto Date
+    fechaConHora.setHours(horas, minutos);
+
+    const conflictoClase = this.verificarConflictoDeClases(fechaConHora,this.claseForm.get('duracion')!.value)
+
+    if(conflictoClase){
+      return;
+    }else{
+      grupoData.fechaHora = fechaConHora;
+      grupoData.estado = "Activo"
+
+      console.log(grupoData)
+      return;
+      
+      this.firestore.collection('clases').add(grupoData)
+        .then(() => {
+          this.snackBar.open('Clase guardada con éxito', 'Cerrar', {
+            duration: 2000,
+          });
+        })
+        .catch(error => {
+          console.log(error)
+          this.snackBar.open('No se ha podido guardar la clase.', 'Cerrar', {
+            duration: 2000,
+          });
+        });
+    }
+
+  }
+
+  //COMPROBAMOS QUE NO EXISTA UNA CLASE EN ESE PERIODO DE TIEMPO
+   verificarConflictoDeClases(nuevaClaseFechaHora:any, nuevaClaseDuracion:any) {
+    for (let i = 0; i < this.diasClases.length; i++) {
+      for (let j = 0; j < this.diasClases[i].clases.length; j++) {
+        let claseExistente = this.diasClases[i].clases[j];
+        let inicioExistente = claseExistente.fechaHora;
+        let finExistente = new Date(inicioExistente.getTime() + claseExistente.duracion * 60000);
+  
+        let inicioNueva = nuevaClaseFechaHora;
+        let finNueva = new Date(inicioNueva.getTime() + nuevaClaseDuracion * 60000);
+  
+        if (inicioNueva < finExistente && finNueva > inicioExistente) {
+          this.snackBar.open('Ya tienes una clase dentro del periodo de la nueva clase', 'Cerrar', {
+            duration: 2000,
+          });
+          return true; // Hay un conflicto
+        }
+      }
+    }
+    return false; // No hay conflicto
+  }
+  
 }

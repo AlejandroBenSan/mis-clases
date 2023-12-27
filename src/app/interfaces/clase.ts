@@ -8,6 +8,7 @@ export interface ClaseI {
     estudiantesIds?: string[] // Se almacenaran los ids de los estudiantes en el caso de que sea un grupo
     estudiantes: EstudianteI[]
     fechaHora: Date;
+    duracion: number;
     precio:number;
     contenido?: string;
     deberes?: string;
