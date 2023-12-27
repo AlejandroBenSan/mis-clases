@@ -1,21 +1,55 @@
 <h2 mat-dialog-title>Añadir clase</h2>
 <mat-dialog-content>
-    <form [formGroup]="claseForm" class="form-grid">
-      <div class="grid-row">
-        
-      </div>
-      <div class="grid-row">
-        
-      </div>
-      <div class="grid-row">
-        
-      </div>
-      <div class="grid-row">
-        
-      </div>
-    </form>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>Cancelar</button>
-    <button mat-button cdkFocusInitial>Añadir</button>
-  </mat-dialog-actions>
+  <form [formGroup]="claseForm" class="form-grid">
+    <div class="grid-row">
+      <mat-radio-group formControlName="tipoClase">
+        <mat-radio-button value="particular">Particular</mat-radio-button>
+        <mat-radio-button value="grupo">Grupo</mat-radio-button>
+      </mat-radio-group>
+    </div>
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value === 'particular'">
+      <mat-form-field>
+        <mat-label>Estudiante</mat-label>
+        <mat-select formControlName="estudiante" (selectionChange)="onEstudianteSelected($event)">
+          <mat-option *ngFor="let estudiante of estudiantes | async" [value]="estudiante.id">
+            {{ estudiante.nombre + ' ' + estudiante.apellidos}} 
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Precio</mat-label>
+        <input matInput placeholder="Precio" formControlName="precio">
+      </mat-form-field>
+    </div>
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value === 'grupo'">
+      <mat-form-field>
+        <mat-label>Grupo</mat-label>
+        <mat-select formControlName="grupo" (selectionChange)="onGrupoSelected($event)">
+          <mat-option *ngFor="let grupo of grupos | async" [value]="grupo.id">
+            {{ grupo.nombre}} 
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Precio</mat-label>
+        <input matInput placeholder="Precio" formControlName="precio">
+      </mat-form-field>
+    </div>
+    <div class="grid-row">
+      <mat-form-field class="example-full-width">
+        <mat-label>Fecha</mat-label>
+        <input matInput [matDatepicker]="picker" disabled>
+        <mat-hint>DD/MM/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker disabled="false" [dateClass]="isClaseDay" #picker></mat-datepicker>
+      </mat-form-field>
+      <ngb-timepicker [(ngModel)]="time" />
+      <hr />
+      <pre>Selected time: {{ time | json }}</pre> 
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button cdkFocusInitial>Añadir</button>
+</mat-dialog-actions>

@@ -4,29 +4,40 @@
     </button>
     
     <mat-accordion multi="true">
-        <mat-expansion-panel *ngFor="let day of days">
+        <mat-expansion-panel *ngFor="let dia of diasClases">
             <mat-expansion-panel-header>
                 <mat-panel-title class="panel-title">
-                    <span class="date-title">{{ day.date | date: 'fullDate' }}</span>
-                    <span *ngIf="day.classes.length > 0" class="badge">
-                        {{ day.classes.length }}
+                    <span class="date-title">{{ dia.fecha | date: 'fullDate' }}</span>
+                    <span *ngIf="dia.clases.length > 0" class="badge">
+                        {{ dia.clases.length }}
                     </span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
     
-            <table mat-table [dataSource]="day.classes" class="mat-elevation-z8">
+            <table mat-table [dataSource]="dia.clases" class="mat-elevation-z8">
                 
                 <!-- Columna Hora -->
                 <ng-container matColumnDef="hora">
                     <th mat-header-cell *matHeaderCellDef> Hora </th>
-                    <td mat-cell *matCellDef="let clase"> {{ clase.hora }} </td>
+                    <td mat-cell *matCellDef="let clase"> {{ clase.fechaHora | date: 'HH:mm' }} </td>
                 </ng-container>
     
                 <!-- Columna Estudiantes -->
                 <ng-container matColumnDef="estudiantes">
                     <th mat-header-cell *matHeaderCellDef> Estudiantes </th>
-                    <td mat-cell *matCellDef="let clase"> {{ clase.estudiantes }} </td>
-                </ng-container>
+                    <td mat-cell *matCellDef="let clase">
+                      <!-- Verificar si idGrupo es vacío -->
+                      <ng-container *ngIf="clase.idGrupo != ''; else showStudent">
+                        {{ clase.nombreGrupo }} (grupo)
+                      </ng-container>
+                  
+                      <!-- Template alternativo cuando idGrupo no es vacío -->
+                      <ng-template #showStudent>
+                        <!-- Suponiendo que tienes una forma de obtener el nombre completo del estudiante -->
+                        {{ clase.estudiantes[0].nombre + ' ' + clase.estudiantes[0].apellidos}}
+                      </ng-template>
+                    </td>
+                  </ng-container>
     
                 <!-- Columna Precio -->
                 <ng-container matColumnDef="precio">
@@ -60,7 +71,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
     
-            <button mat-raised-button color="primary" (click)="addClass(day)">
+            <button mat-raised-button color="primary" (click)="addClass(dia)">
                 Añadir Clase
             </button>
         </mat-expansion-panel>

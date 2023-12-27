@@ -16,4 +16,9 @@
   .full-width-radio {
     grid-column: span 2; /* Ocupa las dos columnas */
   }
+
+  button.custom-date-class {
+    background: #fada5e;
+    border-radius: 100%;
+  }
   

@@ -39,6 +39,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { GruposComponent } from './components/estudiantes/grupos/grupos.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { ModificarGrupoComponent } from './components/estudiantes/modificar-grupo/modificar-grupo.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule} from '@angular/material/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -63,6 +67,9 @@ registerLocaleData(localeEs);
   ],
   imports: [
     BrowserModule,
+    NgbTimepickerModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     MatTooltipModule,
     MatSelectModule,
     MatMenuModule,
@@ -85,6 +92,7 @@ registerLocaleData(localeEs);
     MatIconModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireAnalyticsModule,
+    NgbModule,
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es' },
