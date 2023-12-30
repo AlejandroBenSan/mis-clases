@@ -1,19 +1,41 @@
 .form-grid {
-    display: grid;
-    grid-gap: 10px; /* Espacio entre filas y columnas */
-  }
-  
-  .grid-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
-    grid-gap: 10px; /* Espacio entre columnas */
-  }
-  
-  .full-width {
-    grid-column: span 1; /* Ocupa las dos columnas */
-  }
+  display: grid;
+  grid-gap: 10px; /* Espacio entre filas y columnas */
+}
 
-  .full-width-radio {
-    grid-column: span 2; /* Ocupa las dos columnas */
-  }
-  
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+  grid-gap: 10px; /* Espacio entre columnas */
+}
+
+.full-width {
+  grid-column: span 1; /* Ocupa las dos columnas */
+}
+
+.full-width-radio {
+  grid-column: span 2; /* Ocupa las dos columnas */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Asegura que los elementos se ajusten en pantallas pequeñas */
+}
+
+.boton-container {
+  flex-basis: 100%; /* Ocupa todo el ancho en una nueva línea */
+  text-align: right; /* Alinea el botón a la derecha */
+  margin-bottom: 10px; /* Espaciado entre el botón y los filtros */
+}
+
+.filtro-container {
+  display: flex;
+  gap: 20px; /* Aumenta el espacio entre los filtros */
+  justify-content: flex-end; /* Alinea los filtros a la derecha */
+}
+
+.filtro {
+  width: 250px; /* Ajusta el ancho de los campos de filtro */
+}

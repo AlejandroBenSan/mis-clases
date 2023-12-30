@@ -38,3 +38,18 @@ mat-accordion {
 .boton-nuevaClase-fecha{
   margin-bottom: 10px;
 }
+
+.contenedor-principal {
+  display: flex;
+  justify-content: space-between; /* Esto alinea los elementos a los extremos */
+  align-items: center;
+  width: 100%; /* Asegúrate de que el contenedor ocupe todo el ancho */
+}
+
+
+.contenedor-secundario {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-left: 20px;
+}

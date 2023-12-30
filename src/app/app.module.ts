@@ -43,6 +43,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -67,6 +69,8 @@ registerLocaleData(localeEs);
   ],
   imports: [
     BrowserModule,
+    MatCheckboxModule,
+    MatGridListModule,
     NgbTimepickerModule,
     MatNativeDateModule,
     MatDatepickerModule,

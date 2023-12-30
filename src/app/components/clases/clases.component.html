@@ -1,10 +1,32 @@
 <div style="padding: 20px;">
-    <button class="boton-nuevaClase-fecha" mat-raised-button color="primary" (click)="addClassUndefinedDate()">
-        Nueva Clase en Fecha No Establecida
-    </button>
+
+    
+    <div class="contenedor-principal">
+        <button class="boton-nuevaClase-fecha" mat-raised-button color="primary" (click)="addClassUndefinedDate()">
+            Nueva Clase
+        </button>
+        <div class="contenedor-secundario">
+            <mat-form-field appearance="outline">
+                <mat-label>Filtrar por nombre</mat-label>
+                <input (keyup)="aplicarFiltroNombre($event)" [(ngModel)]="filtroNombre" matInput placeholder="Búsqueda">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Filtrar por fechas</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                  <input [(ngModel)]="filtroFechaInicio" matStartDate placeholder="Principio">
+                  <input [(ngModel)]="filtroFechaFin" matEndDate placeholder="Final">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+        <button mat-raised-button color="secondary" (click)="limpiarFiltros()">
+            <mat-icon>clear_all</mat-icon>Limpiar filtros
+        </button>
+    </div>
     
     <mat-accordion multi="true">
-        <mat-expansion-panel *ngFor="let dia of diasClases">
+        <mat-expansion-panel *ngFor="let dia of (filtroActivo ? diasClasesFiltrados : diasClases)">
             <mat-expansion-panel-header>
                 <mat-panel-title class="panel-title">
                     <span class="date-title">{{ dia.fecha | date: 'fullDate' }}</span>
@@ -76,9 +98,6 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
     
-            <button mat-raised-button color="primary" (click)="addClass(dia)">
-                Añadir Clase
-            </button>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

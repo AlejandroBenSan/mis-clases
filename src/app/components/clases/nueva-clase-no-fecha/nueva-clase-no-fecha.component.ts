@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ViewChild  } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,9 @@ import { MatSelectChange } from '@angular/material/select';
 import { diasClasesI } from 'src/app/interfaces/diasClases';
 import { ClaseI } from 'src/app/interfaces/clase';
 import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { AjustesI } from 'src/app/interfaces/ajustes';
 
 @Component({
   selector: 'app-nueva-clase-no-fecha',
@@ -20,17 +23,24 @@ import { MatCalendarCellClassFunction } from '@angular/material/datepicker';
 })
 export class NuevaClaseNoFechaComponent {
 
+  //CHECK BOX DEL FORMULARIO DE GRUPO PARA SELECCIONAR ESTUDIANTES
+  @ViewChild('checkEstudiantes') checkboxEstudiantes!: MatCheckbox;
+
   claseForm: FormGroup;
   estudiantes: Observable<EstudianteI[]> = this.firestore.collection<EstudianteI>('estudiantes').valueChanges({ idField: 'id' });
   grupos: Observable<GrupoI[]> = this.firestore.collection<GrupoI>('grupos').valueChanges({ idField: 'id' });
   //AUTORELLENO DEL PRECIO
   estudiantesNoSeleccionados: EstudianteI[] = []
   gruposNoSeleccionados: GrupoI[] = []
+  //ESTUDIANTES DEL GRUPO
+  estudiantesGrupo: EstudianteI[] = []
   //HORA DE LA CLASE
   time = { hour: new Date().getHours(), minute: new Date().getMinutes()};
   //
   diasClases: diasClasesI[] = [];
   clases!: Observable<ClaseI[]>;
+  //AJUSTES
+  ajustes!: AjustesI
 
   constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<NuevaClaseNoFechaComponent>, 
     private snackBar: MatSnackBar, private firestore: AngularFirestore){
@@ -39,7 +49,7 @@ export class NuevaClaseNoFechaComponent {
         tipoClase: [''],
         estudiante: [''],
         grupo: [''],
-        estudiantesIds: this.fb.array([], Validators.required), // Se maneja como un array de form controls
+        estudiantesIds: [[]], // Se maneja como un array de form controls
         fechaHora: [null, Validators.required],
         duracion: [null, Validators.required],
         precio: [null, [Validators.required, Validators.min(0)]],
@@ -51,6 +61,7 @@ export class NuevaClaseNoFechaComponent {
 
   ngOnInit(): void {
     this.clases = this.obtenerClases()
+    this.obtenerAjustes()
     this.cargaDatos()
 
   }
@@ -81,6 +92,19 @@ export class NuevaClaseNoFechaComponent {
     return '';
   };
 
+  onTipoClaseChange(event: MatRadioChange) {
+    // Si el tipo de clase cambia, resetea los campos de estudiante y grupo
+    if (event.value === 'particular') {
+        this.claseForm.get('grupo')!.reset();
+        this.claseForm.get('precio')!.reset();
+        this.claseForm.get('estudiantesIds')!.reset();
+    } else if (event.value === 'grupo') {
+        this.claseForm.get('estudiante')!.reset();
+        this.claseForm.get('precio')!.reset();
+        this.claseForm.get('estudiantesIds')!.reset();
+    }
+  }
+
   onEstudianteSelected(event: MatSelectChange) {
     const estudianteSeleccionado = this.estudiantesNoSeleccionados.find(e => e.id === event.value);
     // Actualiza el precioClaseEstudiante basado en estudianteSeleccionado
@@ -89,6 +113,9 @@ export class NuevaClaseNoFechaComponent {
   
   onGrupoSelected(event: MatSelectChange) {
     const grupoSeleccionado = this.gruposNoSeleccionados.find(g => g.id === event.value);
+
+    this.estudiantesGrupo = grupoSeleccionado?.estudiantes ?? [];
+    
     // Actualiza el precioClaseGrupo basado en grupoSeleccionado
     this.claseForm.get('precio')!.setValue(grupoSeleccionado ? grupoSeleccionado.precioClase : '');
   }
@@ -125,17 +152,58 @@ export class NuevaClaseNoFechaComponent {
   
     this.grupos.subscribe(grupos => {
       this.gruposNoSeleccionados = grupos;
-      console.log(grupos)
+      
+      //AÑADIMOS LOS NOMBRES DE LOS ESTUDIANTES EN EL GRUPOS POR SUS IDS
+      for(let i = 0;i < this.gruposNoSeleccionados.length; i++){
+        this.obtenerEstudiantesDelGrupo(this.gruposNoSeleccionados[i].estudiantesIds).subscribe(estudiantes => {
+          this.gruposNoSeleccionados[i].estudiantes = estudiantes;
+        });
+      }
     });
 
     this.clases.subscribe({
       next: async (clases) => {
-        console.log('Clases cargadas modal:', clases);
         await this.agruparClasesPorDias(clases);
 
       },
       error: (error) => console.error('Error:', error)
     });
+  }
+
+  //OBTENEMOS LOS ESTUDIANTES DEL GRUPO
+  private obtenerEstudiantesDelGrupo(estudiantesIds: string[]): Observable<EstudianteI[]> {
+    
+    if(estudiantesIds == null){
+      estudiantesIds = []
+      if (estudiantesIds.length === 0) {
+        // Si no hay estudiantes, retorna un observable vacío
+        return of([]);
+      }
+    }
+  
+    const estudiantesObservables = estudiantesIds
+    .filter(id => id)  // Filtra IDs no válidos o vacíos
+    .map(id => 
+      this.firestore.collection('estudiantes').doc(id).snapshotChanges().pipe(
+        map(action => {
+          // Obtener los datos del estudiante y agregar el ID
+          const datos = action.payload.data() as EstudianteI;
+          return { ...datos, id };  // Combina los datos del estudiante con su ID
+        }),
+        take(1)
+      )
+    );
+  
+    return forkJoin(estudiantesObservables);
+  }
+
+  estudiantesSeleccionadosClase(evento: any){
+    console.log(evento.value)
+    this.claseForm.patchValue({
+      estudiantesIds: evento.value
+    });
+
+    console.log(this.claseForm.get('estudiantesIds')!.value)
   }
 
   obtenerClases(): Observable<ClaseI[]>{
@@ -156,26 +224,16 @@ export class NuevaClaseNoFechaComponent {
 
         return forkJoin(gruposObservables);
       })
-    );
+    ); 
   }
 
-  private obtenerEstudiantesDelGrupo(estudiantesIds: string[]): Observable<EstudianteI[]> {
-    
-    if (estudiantesIds.length === 0) {
-      // Si no hay estudiantes, retorna un observable vacío
-      return of([]);
-    }
-  
-    const estudiantesObservables = estudiantesIds
-    .filter(id => id)  // Filtra IDs no válidos o vacíos
-    .map(id => 
-      this.firestore.collection('estudiantes').doc(id).snapshotChanges().pipe(
-        map(action => action.payload.data() as EstudianteI),
-        take(1)
-      )
-    );
-  
-    return forkJoin(estudiantesObservables);
+  obtenerAjustes(){
+    this.firestore.collection('ajustes').get().subscribe(snapshot => {
+      snapshot.forEach(doc => {
+        this.ajustes = doc.data() as AjustesI;
+        console.log(this.ajustes); // Aquí manejas el valor obtenido
+      });
+    });
   }
 
   obtenerFechaYHora(timestamp: { seconds: number, nanoseconds: number }): Date {
@@ -186,7 +244,7 @@ export class NuevaClaseNoFechaComponent {
   guardarClase(){
     const grupoData = this.claseForm.value;
 
-    if (this.claseForm.get('tipoClase')!.value == "") {
+    if (this.claseForm.get('tipoClase')!.value == "" || this.claseForm.get('tipoClase')!.value == null) {
       this.snackBar.open('Debe seleccionar el tipo de clase', 'Cerrar', {
         duration: 2000,
       });
@@ -246,14 +304,47 @@ export class NuevaClaseNoFechaComponent {
       grupoData.fechaHora = fechaConHora;
       grupoData.estado = "Activo"
 
-      console.log(grupoData)
-      return;
+      //Para que no de error al leer la clase de campo null
+      if(grupoData.estudiantesIds == null){
+        grupoData.estudiantesIds = []
+      }
+
+      if(this.claseForm.get('tipoClase')!.value == "grupo"){
+        if(this.checkboxEstudiantes.checked){
+
+          if (!grupoData.estudiantesIds) {
+            grupoData.estudiantesIds = [];
+          }
+
+          for(let i = 0; i < this.estudiantesGrupo.length; i++){
+            grupoData.estudiantesIds.push(this.estudiantesGrupo[i].id)
+          }
+        }else{
+
+        }
+      }
       
-      this.firestore.collection('clases').add(grupoData)
+      const datosfirebase = {
+        contenido: grupoData.contenido,
+        deberes: grupoData.deberes,
+        documentos: "",
+        duracion: grupoData.duracion,
+        estado: grupoData.estado,
+        estudiantesIds: grupoData.estudiantesIds,
+        fechaHora: grupoData.fechaHora,
+        idParticular: grupoData.estudiante,
+        idGrupo: grupoData.grupo,
+        precio: grupoData.precio
+      }
+      
+      console.log(datosfirebase)
+      
+      this.firestore.collection('clases').add(datosfirebase)
         .then(() => {
           this.snackBar.open('Clase guardada con éxito', 'Cerrar', {
             duration: 2000,
           });
+          this.dialogRef.close();
         })
         .catch(error => {
           console.log(error)
@@ -267,15 +358,19 @@ export class NuevaClaseNoFechaComponent {
 
   //COMPROBAMOS QUE NO EXISTA UNA CLASE EN ESE PERIODO DE TIEMPO
    verificarConflictoDeClases(nuevaClaseFechaHora:any, nuevaClaseDuracion:any) {
+
     for (let i = 0; i < this.diasClases.length; i++) {
       for (let j = 0; j < this.diasClases[i].clases.length; j++) {
         let claseExistente = this.diasClases[i].clases[j];
         let inicioExistente = claseExistente.fechaHora;
         let finExistente = new Date(inicioExistente.getTime() + claseExistente.duracion * 60000);
-  
+
         let inicioNueva = nuevaClaseFechaHora;
         let finNueva = new Date(inicioNueva.getTime() + nuevaClaseDuracion * 60000);
-  
+
+        // Ajustar los tiempos con el descanso
+        finExistente = new Date(finExistente.getTime() + this.ajustes.tiempoEntreClases * 60000);
+
         if (inicioNueva < finExistente && finNueva > inicioExistente) {
           this.snackBar.open('Ya tienes una clase dentro del periodo de la nueva clase', 'Cerrar', {
             duration: 2000,

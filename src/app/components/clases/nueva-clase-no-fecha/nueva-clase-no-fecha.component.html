@@ -2,11 +2,13 @@
 <mat-dialog-content>
   <form [formGroup]="claseForm" class="form-grid">
     <div class="grid-row">
-      <mat-radio-group formControlName="tipoClase" class="full-width-radio">
+      <!--RADIO BUTONS DEL TIPO DE CLASE-->
+      <mat-radio-group formControlName="tipoClase" class="full-width-radio" (change)="onTipoClaseChange($event)">
         <mat-radio-button value="particular">Particular</mat-radio-button>
         <mat-radio-button value="grupo">Grupo</mat-radio-button>
       </mat-radio-group>
     </div>
+    <!--SELECCION DE NOMBRE Y PRECIO DEL ESTUDIANTE PARTICULAR-->
     <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value === 'particular'">
       <mat-form-field>
         <mat-label>Estudiante</mat-label>
@@ -21,6 +23,7 @@
         <input matInput placeholder="Precio" formControlName="precio">
       </mat-form-field>
     </div>
+    <!--SELECCION DE NOMBRE Y PRECIO DEL GRUPO-->
     <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value === 'grupo'">
       <mat-form-field>
         <mat-label>Grupo</mat-label>
@@ -35,6 +38,23 @@
         <input matInput placeholder="Precio" formControlName="precio">
       </mat-form-field>
     </div>
+    <!--SELECCIONAR LOS ESTUDIANTES QUE ASISTIRAR A LA CLASE DEL GRUPO-->
+    <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value === 'grupo' && claseForm.get('grupo')!.value != '' && claseForm.get('grupo')!.value != null">
+      <section>
+        <mat-checkbox #checkEstudiantes checked="true">Todos del grupo</mat-checkbox>
+      </section>
+      <section *ngIf="!checkEstudiantes.checked">
+        <mat-form-field>
+          <mat-label>Estudiantes</mat-label>
+          <mat-select formArrayName="estudiantesIds" multiple (selectionChange)="estudiantesSeleccionadosClase($event)">
+            <mat-option *ngFor="let estudiante of estudiantesGrupo" [value]="estudiante.id">
+              {{ estudiante.nombre + ' ' + estudiante.apellidos}}  
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+    </div>
+    <!--SELECCION DE LA FECHA DE LA CLASE-->
     <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
       <mat-form-field class="example-full-width">
         <mat-label>Fecha</mat-label>
@@ -43,12 +63,14 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker disabled="false" [dateClass]="isClaseDay" #picker></mat-datepicker>
       </mat-form-field>
+      <!--SELECCION DE LA HORA DE LA CLASE-->
       <div style="display: flex; flex-direction: column; align-items: center;">
         <span style="font-size: small; text-align: center;">Inicio Clase</span>
         <!--{standalone: true} SE UTILIZA ESTO PARA HACER EL MODULO INDEPENDIENTE Y QUE NO CREE QUE CONFLICTO AL SER UNA LIBRERIA DIFERENTE-->
         <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}" [spinners]="false"/>
       </div>
     </div>
+    <!--SELECCION DE CUANTOS MINUTOS DURARÁ LA CLASE-->
     <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
       <mat-form-field floatLabel="always">
         <mat-label>Duración</mat-label>
@@ -56,6 +78,7 @@
         <span matTextSuffix>Minutos</span>
       </mat-form-field>
     </div>
+    <!--AÑADIR CONTENIDO DE LA CLASE (OPCIONAL)-->
     <div class="grid-row" *ngIf="claseForm.get('tipoClase')!.value">
       <mat-form-field class="full-width-radio">
         <mat-label>Contenido</mat-label>
@@ -64,6 +87,7 @@
     </div>
   </form>
 </mat-dialog-content>
+<!--BOTONES DEL FORMULARIO-->
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
   <button mat-button cdkFocusInitial (click)="guardarClase()">Añadir</button>

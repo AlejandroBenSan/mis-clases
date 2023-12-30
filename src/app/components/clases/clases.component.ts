@@ -21,6 +21,13 @@ export class ClasesComponent {
   clases!: Observable<ClaseI[]>;
   displayedColumns: string[] = ['hora','duracion', 'estudiantes', 'precio', 'estado', 'acciones'];
   diasClases: diasClasesI[] = [];
+  
+  //filtros
+  filtroNombre: string | null = null;
+  filtroFechaInicio: Date | null = null;
+  filtroFechaFin: Date | null = null;
+  diasClasesFiltrados: diasClasesI[] = [];
+  filtroActivo: boolean = false;
 
   constructor(private firestore: AngularFirestore, public dialog: MatDialog, private snackBar: MatSnackBar){
     this.dataSource = new MatTableDataSource();
@@ -41,6 +48,22 @@ export class ClasesComponent {
       error: (error) => console.error('Error:', error)
     });
   }
+
+  aplicarFiltroNombre(event: Event) {
+    const valorFiltro = (event.target as HTMLInputElement).value.toLowerCase();
+
+    this.diasClasesFiltrados = this.diasClases.map(dia => ({
+        ...dia,
+        clases: dia.clases.filter(clase => 
+            (clase.nombreGrupo && clase.nombreGrupo.toLowerCase().includes(valorFiltro)) ||
+            clase.estudiantes.some(estudiante => {
+                const nombreCompleto = `${estudiante.nombre} ${estudiante.apellidos}`.toLowerCase();
+                return nombreCompleto.includes(valorFiltro);
+            })
+        )
+    })).filter(dia => dia.clases.length > 0);
+    this.filtroActivo = true;
+}
 
   agruparClasesPorDias(clases: ClaseI[]) {
     const mapaDias = new Map<string, ClaseI[]>();
@@ -107,7 +130,14 @@ export class ClasesComponent {
     );
   }
 
-  
+  limpiarFiltros() {
+    this.filtroNombre = null;
+    this.filtroFechaInicio = null;
+    this.filtroFechaFin = null;
+
+    //Limpiamos el filtro para mostrar todas las clases
+    this.filtroActivo = false;
+}
 
   //OBTENEMOS LOS ESTUDIANTES DEL GRUPO
   private obtenerEstudiantesDelGrupo(estudiantesIds: string[]): Observable<EstudianteI[]> {
