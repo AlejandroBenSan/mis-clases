@@ -45,6 +45,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatGridListModule} from '@angular/material/grid-list';
+import { ModificarClaseComponent } from './components/clases/modificar-clase/modificar-clase.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { ConfirmarClaseComponent } from './components/clases/confirmar-clase/confirmar-clase.component';
+import { CancelarClaseComponent } from './components/clases/cancelar-clase/cancelar-clase.component';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -66,11 +70,15 @@ registerLocaleData(localeEs);
     CrearGrupoComponent,
     GruposComponent,
     ModificarGrupoComponent,
+    ModificarClaseComponent,
+    ConfirmarClaseComponent,
+    CancelarClaseComponent,
   ],
   imports: [
     BrowserModule,
     MatCheckboxModule,
     MatGridListModule,
+    MatProgressSpinnerModule,
     NgbTimepickerModule,
     MatNativeDateModule,
     MatDatepickerModule,

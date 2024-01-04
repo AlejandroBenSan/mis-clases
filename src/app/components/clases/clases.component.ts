@@ -9,6 +9,9 @@ import { Observable, forkJoin, map, of, switchMap, take } from 'rxjs';
 import { EstudianteI } from 'src/app/interfaces/estudiante';
 import { diasClasesI } from 'src/app/interfaces/diasClases';
 import { GrupoI } from 'src/app/interfaces/grupo';
+import { ModificarClaseComponent } from './modificar-clase/modificar-clase.component';
+import { ConfirmarClaseComponent } from './confirmar-clase/confirmar-clase.component';
+import { CancelarClaseComponent } from './cancelar-clase/cancelar-clase.component';
 
 @Component({
   selector: 'app-clases',
@@ -24,8 +27,6 @@ export class ClasesComponent {
   
   //filtros
   filtroNombre: string | null = null;
-  filtroFechaInicio: Date | null = null;
-  filtroFechaFin: Date | null = null;
   diasClasesFiltrados: diasClasesI[] = [];
   filtroActivo: boolean = false;
 
@@ -90,8 +91,10 @@ export class ClasesComponent {
 
 
   obtenerClases(): Observable<ClaseI[]>{
-    return this.firestore.collection('clases').snapshotChanges().pipe(
-      switchMap(clasesSnapshot => {
+    return this.firestore.collection('clases', ref => 
+      ref.where('estado', 'in', ['Activo', 'Revisar'])
+      ).snapshotChanges()
+      .pipe(switchMap(clasesSnapshot => {
         const gruposObservables = clasesSnapshot.map(claseDoc => {
           // Aquí, extraemos el ID del documento y lo añadimos al objeto grupo
           const clase = claseDoc.payload.doc.data() as ClaseI;
@@ -132,8 +135,6 @@ export class ClasesComponent {
 
   limpiarFiltros() {
     this.filtroNombre = null;
-    this.filtroFechaInicio = null;
-    this.filtroFechaFin = null;
 
     //Limpiamos el filtro para mostrar todas las clases
     this.filtroActivo = false;
@@ -190,16 +191,7 @@ export class ClasesComponent {
   obtenerFechaYHora(timestamp: { seconds: number, nanoseconds: number }): Date {
     // Convierte el Timestamp a un objeto Date
     return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
-
-    // Formatea la fecha y la hora a un formato legible
-    /*
-    const opcionesFecha: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    const opcionesHora: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-
-    const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
-    const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora);
-    */    
-}
+  }
 
   addClassUndefinedDate(){
     {
@@ -217,27 +209,75 @@ export class ClasesComponent {
     }
   }
 
-  addClassDefinedDate(){
-
-  }
-
-  addClass(day:any): void {
-    // Lógica para añadir una nueva clase
-  }
-
   editClass(clase:any): void {
     // Lógica para editar una clase
-    console.log('Editar clase', clase);
+    const dialogRef = this.dialog.open(ModificarClaseComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {clase: clase, diasClases: this.diasClases}
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+
+        console.log(result);
+      }
+    });
+
   }
 
   deleteClass(clase:any): void {
     // Lógica para eliminar una clase
-    console.log('Eliminar clase', clase);
+    const dialogRef = this.dialog.open(CancelarClaseComponent, {
+      width: '500px',
+      disableClose: true,
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.firestore.collection('clases').doc(clase.id).update({
+          estado: "Cancelada"
+        })
+        .then(() => {
+          this.snackBar.open('Clase cancelada con éxito', 'Cerrar', {
+            duration: 2000,
+          });
+        })
+        .catch(error => {
+          this.snackBar.open('Se ha producido un error al cancelar la clase', 'Cerrar', {
+            duration: 2000,
+          });
+          console.log(error)
+      });
+      }
+    });
   }
 
-  doneClass(clase:any): void {
+  doneClass(clase: ClaseI): void {
     // Lógica para eliminar una clase
-    console.log('Realizada clase', clase);
+    const dialogRef = this.dialog.open(ConfirmarClaseComponent, {
+      width: '500px',
+      disableClose: true,
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.firestore.collection('clases').doc(clase.id).update({
+          estado: "Realizada"
+        })
+        .then(() => {
+          this.snackBar.open('Clase realizada con éxito', 'Cerrar', {
+            duration: 2000,
+          });
+        })
+        .catch(error => {
+          this.snackBar.open('Se ha producido un error al actualizar la clase', 'Cerrar', {
+            duration: 2000,
+          });
+          console.log(error)
+      });
+      }
+    });
   }
 
 }

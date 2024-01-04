@@ -1,0 +1,78 @@
+<h2 mat-dialog-title >Modificar clase <h2 class="tipoClase">{{tipoClase}}</h2></h2>
+<mat-dialog-content>
+    <form [formGroup]="claseForm" class="form-grid">
+        <!--MOSTRAOS LA INFORMACION DEL NOMBRE Y PRECIO DE LA CLASE-->
+        <div class="grid-row" *ngIf="tipoClase == 'Particular'">
+            <mat-form-field>
+              <mat-label>Estudiante</mat-label>
+              <input matInput disabled [value]="clase.estudiantes[0].nombre + ' ' + clase.estudiantes[0].apellidos">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Precio</mat-label>
+              <input matInput placeholder="Precio" formControlName="precio">
+            </mat-form-field>
+        </div>
+        <div class="grid-row" *ngIf="tipoClase == 'Grupo'">
+            <mat-form-field>
+              <mat-label>Nombre</mat-label>
+              <input matInput disabled [value]="clase.nombreGrupo">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Precio</mat-label>
+              <input matInput placeholder="Precio" formControlName="precio">
+            </mat-form-field>
+        </div>
+        <!--PARTE DE DE LOS ESTUDIANTES EN EL GRUPO-->
+        <div class="grid-row" *ngIf="tipoClase == 'Grupo'">
+            <section>
+                <mat-checkbox #checkEstudiantes checked="true">Todos del grupo</mat-checkbox>
+            </section>
+            <section *ngIf="!checkEstudiantes.checked">
+              <mat-form-field>
+                <mat-label>Estudiantes</mat-label>
+                <!--{standalone: true} para que no entre en conflicto con el Form-->
+                <mat-select [(ngModel)]="selectedEstudents" [ngModelOptions]="{standalone: true}" multiple (selectionChange)="estudiantesSeleccionadosClase($event)">
+                  <mat-option *ngFor="let estudiante of grupoNoSeleccionado[0].estudiantes" 
+                              [value]="estudiante.id">
+                    {{ estudiante.nombre + ' ' + estudiante.apellidos}}  
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </section>
+        </div>
+        <div class="grid-row">
+          <mat-form-field class="example-full-width">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="fechaHora" >
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker disabled="false" [dateClass]="isClaseDay2" #picker2></mat-datepicker>
+          </mat-form-field>
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: small; text-align: center;">Inicio Clase</span>
+            <!--{standalone: true} SE UTILIZA ESTO PARA HACER EL MODULO INDEPENDIENTE Y QUE NO CREE QUE CONFLICTO AL SER UNA LIBRERIA DIFERENTE-->
+            <ngb-timepicker [(ngModel)]="time" [ngModelOptions]="{standalone: true}" [spinners]="false"/>
+          </div>
+        </div>
+        <div class="grid-row">
+          <mat-form-field floatLabel="always">
+            <mat-label>Duración</mat-label>
+            <input matInput type="number" formControlName="duracion">
+            <span matTextSuffix>Minutos</span>
+          </mat-form-field>
+        </div>
+        <div class="grid-row">
+          <mat-form-field class="full-width-radio">
+            <mat-label>Contenido</mat-label>
+            <textarea formControlName="contenido" matInput></textarea>
+          </mat-form-field>
+        </div>
+    </form>
+  </mat-dialog-content>
+  <!--BOTONES DEL FORMULARIO-->
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button cdkFocusInitial (click)="guardarClaseModificada()">
+      <mat-spinner *ngIf="cargando" diameter="30"></mat-spinner>
+      Modificar</button>
+  </mat-dialog-actions>

@@ -10,15 +10,6 @@
                 <mat-label>Filtrar por nombre</mat-label>
                 <input (keyup)="aplicarFiltroNombre($event)" [(ngModel)]="filtroNombre" matInput placeholder="Búsqueda">
             </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Filtrar por fechas</mat-label>
-                <mat-date-range-input [rangePicker]="picker">
-                  <input [(ngModel)]="filtroFechaInicio" matStartDate placeholder="Principio">
-                  <input [(ngModel)]="filtroFechaFin" matEndDate placeholder="Final">
-                </mat-date-range-input>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
         </div>
         <button mat-raised-button color="secondary" (click)="limpiarFiltros()">
             <mat-icon>clear_all</mat-icon>Limpiar filtros

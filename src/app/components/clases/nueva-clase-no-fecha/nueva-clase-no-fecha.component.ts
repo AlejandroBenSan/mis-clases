@@ -19,7 +19,7 @@ import { AjustesI } from 'src/app/interfaces/ajustes';
   templateUrl: './nueva-clase-no-fecha.component.html',
   styleUrls: ['./nueva-clase-no-fecha.component.css'],
   //Hay que poner esto para que se muestren los colores de los dias en el calendario
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class NuevaClaseNoFechaComponent {
 
@@ -207,7 +207,9 @@ export class NuevaClaseNoFechaComponent {
   }
 
   obtenerClases(): Observable<ClaseI[]>{
-    return this.firestore.collection('clases').snapshotChanges().pipe(
+    return this.firestore.collection('clases', ref => 
+    ref.where('estado', 'in', ['Activo', 'Revisar'])
+    ).snapshotChanges().pipe(
       switchMap((clasesSnapshot: any[]) => {
         const gruposObservables = clasesSnapshot.map(claseDoc => {
           // Aquí, extraemos el ID del documento y lo añadimos al objeto grupo
@@ -252,6 +254,13 @@ export class NuevaClaseNoFechaComponent {
     }
 
     if(this.claseForm.get('grupo')!.value == "" && this.claseForm.get('estudiante')!.value == ""){
+      this.snackBar.open('Debe seleccionar al menos un estudiante o grupo', 'Cerrar', {
+        duration: 2000,
+      });
+      return;
+    }
+
+    if(this.claseForm.get('grupo')!.value == null && this.claseForm.get('estudiante')!.value == null){
       this.snackBar.open('Debe seleccionar al menos un estudiante o grupo', 'Cerrar', {
         duration: 2000,
       });
@@ -309,6 +318,15 @@ export class NuevaClaseNoFechaComponent {
         grupoData.estudiantesIds = []
       }
 
+      //INICIALIZAMOS PARA NO TENER PROBLEMA A LA HORA DE LEER LAS CLASES
+      if(grupoData.grupo == null){
+        grupoData.grupo = ""
+      }
+
+      if(grupoData.estudiante == null){
+        grupoData.estudiante = ""
+      }
+
       if(this.claseForm.get('tipoClase')!.value == "grupo"){
         if(this.checkboxEstudiantes.checked){
 
@@ -357,29 +375,34 @@ export class NuevaClaseNoFechaComponent {
   }
 
   //COMPROBAMOS QUE NO EXISTA UNA CLASE EN ESE PERIODO DE TIEMPO
-   verificarConflictoDeClases(nuevaClaseFechaHora:any, nuevaClaseDuracion:any) {
-
+  verificarConflictoDeClases(nuevaClaseFechaHora: any, nuevaClaseDuracion: any) {
     for (let i = 0; i < this.diasClases.length; i++) {
-      for (let j = 0; j < this.diasClases[i].clases.length; j++) {
-        let claseExistente = this.diasClases[i].clases[j];
-        let inicioExistente = claseExistente.fechaHora;
-        let finExistente = new Date(inicioExistente.getTime() + claseExistente.duracion * 60000);
+        for (let j = 0; j < this.diasClases[i].clases.length; j++) {
+            let claseExistente = this.diasClases[i].clases[j];
+            let inicioExistente = claseExistente.fechaHora;
+            let finExistente = new Date(inicioExistente.getTime() + claseExistente.duracion * 60000);
 
-        let inicioNueva = nuevaClaseFechaHora;
-        let finNueva = new Date(inicioNueva.getTime() + nuevaClaseDuracion * 60000);
+            let inicioNueva = nuevaClaseFechaHora;
+            let finNueva = new Date(inicioNueva.getTime() + nuevaClaseDuracion * 60000);
 
-        // Ajustar los tiempos con el descanso
-        finExistente = new Date(finExistente.getTime() + this.ajustes.tiempoEntreClases * 60000);
+            // Determinar cuál clase comienza primero
+            if (inicioExistente <= inicioNueva) {
+                // Sumar el tiempo de descanso a la clase existente
+                finExistente = new Date(finExistente.getTime() + this.ajustes.tiempoEntreClases * 60000);
+            } else {
+                // Sumar el tiempo de descanso a la nueva clase
+                finNueva = new Date(finNueva.getTime() + this.ajustes.tiempoEntreClases * 60000);
+            }
 
-        if (inicioNueva < finExistente && finNueva > inicioExistente) {
-          this.snackBar.open('Ya tienes una clase dentro del periodo de la nueva clase', 'Cerrar', {
-            duration: 2000,
-          });
-          return true; // Hay un conflicto
+            if (inicioNueva < finExistente && finNueva > inicioExistente) {
+                this.snackBar.open('Ya tienes una clase dentro del periodo de la nueva clase', 'Cerrar', {
+                    duration: 2000,
+                });
+                return true; // Hay un conflicto
+            }
         }
-      }
     }
     return false; // No hay conflicto
-  }
+}
   
 }
