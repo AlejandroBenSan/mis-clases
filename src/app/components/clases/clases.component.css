@@ -21,22 +21,28 @@ mat-accordion {
 
 .panel-title {
   display: flex;
-  justify-content: space-between; /* Alinea los elementos a cada extremo */
-  align-items: center; /* Centra los elementos verticalmente */
-  width: 100%; /* Asegura que el título ocupe todo el ancho disponible */
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
 }
 
 .badge {
   margin-left: 10px;
-  background-color: red; /* Cambia a tu color preferido */
+  background-color: red;
   color: white;
   padding: 3px 6px;
   border-radius: 50%;
   font-size: 0.8em;
 }
 
-.boton-nuevaClase-fecha{
-  margin-bottom: 10px;
+.warning-icon {
+  color: #f0ad4e; /* Color de advertencia */
+  margin-left: 5px; /* Ajusta la distancia entre el badge y el icono */
 }
 
 .contenedor-principal {

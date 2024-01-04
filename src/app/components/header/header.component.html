@@ -4,7 +4,7 @@
     <span class="example-spacer"></span>
     <button mat-button [routerLink]="['/']">Inicio</button>
 
-    <!-- Botón con menú desplegable -->
+    <!-- MENÚ DESPLEGABLE DE LOS ESTUDIANTES-->
     <button mat-button [matMenuTriggerFor]="estudiantesMenu">Estudiantes</button>
     <mat-menu #estudiantesMenu="matMenu">
       <button mat-menu-item [routerLink]="['/estudiantes']">Particulares</button>
@@ -12,8 +12,17 @@
       <!-- Más opciones si es necesario -->
     </mat-menu>
 
+    <!-- BOTÓN DE CLASES-->
     <button mat-button [routerLink]="['/clases']">Clases</button>
-    <button mat-button [routerLink]="['/contabilidad']">Contabilidad</button>
+
+    <!-- MENÚ DESPLEGABLE DE LA GESTIÓN-->
+    <button mat-button [matMenuTriggerFor]="gestionMenu">Gestión</button>
+    <mat-menu #gestionMenu="matMenu">
+      <button mat-menu-item [routerLink]="['/contabilidad']">Contabilidad</button>
+      <button mat-menu-item [routerLink]="['/historico']">Histórico</button>
+      <!-- Más opciones si es necesario -->
+    </mat-menu>
+
     <button mat-button [routerLink]="['/ajustes']">Ajustes</button>
   </mat-toolbar-row>
 </mat-toolbar>

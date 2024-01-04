@@ -4,8 +4,9 @@ import { AjustesComponent } from './components/ajustes/ajustes.component';
 import { ClasesComponent } from './components/clases/clases.component';
 import { HomeComponent } from './components/home/home.component';
 import { EstudiantesComponent } from './components/estudiantes/estudiantes.component';
-import { ContabilidadComponent } from './components/contabilidad/contabilidad.component';
+import { ContabilidadComponent } from './components/gestion/contabilidad/contabilidad.component';
 import { GruposComponent } from './components/estudiantes/grupos/grupos.component';
+import { HistoricoClasesComponent } from './components/gestion/historico-clases/historico-clases.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'estudiantes', component: EstudiantesComponent },
   { path: 'grupos', component: GruposComponent },
   { path: 'contabilidad', component: ContabilidadComponent },
+  { path: 'historico', component: HistoricoClasesComponent },
 ];
 
 @NgModule({

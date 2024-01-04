@@ -21,6 +21,8 @@ import { CancelarClaseComponent } from './cancelar-clase/cancelar-clase.componen
 export class ClasesComponent {
 
   dataSource: MatTableDataSource<ClaseI>
+  //fecha y hora de hoy
+  currentDate = new Date();
   clases!: Observable<ClaseI[]>;
   displayedColumns: string[] = ['hora','duracion', 'estudiantes', 'precio', 'estado', 'acciones'];
   diasClases: diasClasesI[] = [];

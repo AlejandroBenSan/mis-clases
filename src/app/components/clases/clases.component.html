@@ -21,8 +21,12 @@
             <mat-expansion-panel-header>
                 <mat-panel-title class="panel-title">
                     <span class="date-title">{{ dia.fecha | date: 'fullDate' }}</span>
-                    <span *ngIf="dia.clases.length > 0" class="badge">
-                        {{ dia.clases.length }}
+                    <span class="right-side">
+                        <span *ngIf="dia.clases.length > 0" class="badge">
+                            {{ dia.clases.length }}
+                        </span>
+                        <mat-icon *ngIf="dia.fecha < currentDate" class="warning-icon" 
+                            matTooltip="Este día ya ha pasado y quedan clases pendientes.">warning</mat-icon>
                     </span>
                 </mat-panel-title>
             </mat-expansion-panel-header>

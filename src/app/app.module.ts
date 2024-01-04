@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { EstudiantesComponent } from './components/estudiantes/estudiantes.component';
 import { ClasesComponent } from './components/clases/clases.component';
-import { ContabilidadComponent } from './components/contabilidad/contabilidad.component';
+import { ContabilidadComponent } from './components/gestion/contabilidad/contabilidad.component';
 import { AjustesComponent } from './components/ajustes/ajustes.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
@@ -49,6 +49,8 @@ import { ModificarClaseComponent } from './components/clases/modificar-clase/mod
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { ConfirmarClaseComponent } from './components/clases/confirmar-clase/confirmar-clase.component';
 import { CancelarClaseComponent } from './components/clases/cancelar-clase/cancelar-clase.component';
+import { HistoricoClasesComponent } from './components/gestion/historico-clases/historico-clases.component';
+import {MatCardModule} from '@angular/material/card';
 
 //PARA REGISTRAR EL IDIOMA ESPAÑOL
 registerLocaleData(localeEs);
@@ -73,10 +75,12 @@ registerLocaleData(localeEs);
     ModificarClaseComponent,
     ConfirmarClaseComponent,
     CancelarClaseComponent,
+    HistoricoClasesComponent,
   ],
   imports: [
     BrowserModule,
     MatCheckboxModule,
+    MatCardModule,
     MatGridListModule,
     MatProgressSpinnerModule,
     NgbTimepickerModule,
